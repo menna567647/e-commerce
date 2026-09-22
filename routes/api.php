@@ -28,12 +28,13 @@ Route::prefix('v1')->group(function () {
         Route::put('/user/profile', [AuthController::class, 'updateProfile']);
 
         Route::get('/cart', [CartController::class, 'index']);
-        Route::post('/cart', [CartController::class, 'store']);
+        Route::post('/cart', [CartController::class, 'store'])->name('cart.add');
         Route::patch('/cart/{productId}', [CartController::class, 'update']);
         Route::delete('/cart/{productId}', [CartController::class, 'destroy']);
         Route::delete('/cart', [CartController::class, 'clear']);
 
         Route::post('/checkout', [CheckoutController::class, 'store']);
+        Route::post('/orders/checkout', [OrderController::class, 'checkout']);
 
         Route::get('/orders', [OrderController::class, 'index']);
         Route::get('/orders/{order}', [OrderController::class, 'show']);
