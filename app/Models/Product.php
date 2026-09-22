@@ -46,6 +46,11 @@ class Product extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function cartItems()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true);

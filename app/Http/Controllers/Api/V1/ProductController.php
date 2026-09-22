@@ -5,12 +5,11 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index(Request $request): JsonResponse
+    public function index(Request $request)
     {
         $products = Product::active()
             ->with('category')
@@ -38,7 +37,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function featured(): JsonResponse
+    public function featured()
     {
         $products = Product::active()
             ->featured()
@@ -51,7 +50,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function show(Product $product): JsonResponse
+    public function show(Product $product)
     {
         abort_unless($product->is_active, 404);
 

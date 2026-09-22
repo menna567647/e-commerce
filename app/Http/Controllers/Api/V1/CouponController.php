@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\CouponValidationRequest;
 use App\Services\CouponService;
-use Illuminate\Http\JsonResponse;
 
 class CouponController extends Controller
 {
@@ -13,7 +12,7 @@ class CouponController extends Controller
     {
     }
 
-    public function validateCoupon(CouponValidationRequest $request): JsonResponse
+    public function validateCoupon(CouponValidationRequest $request)
     {
         $subtotal = (float) $request->subtotal;
         $coupon = $this->couponService->resolveCoupon($request->code, $subtotal);

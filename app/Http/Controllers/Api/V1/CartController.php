@@ -7,23 +7,22 @@ use App\Http\Requests\Api\V1\AddToCartRequest;
 use App\Http\Requests\Api\V1\UpdateCartRequest;
 use App\Http\Resources\CartResource;
 use App\Services\CartService;
-use Illuminate\Http\JsonResponse;
 use RuntimeException;
 
 class CartController extends Controller
-{
+{ 
     public function __construct(protected CartService $cartService)
     {
     }
 
-    public function index(): JsonResponse
+    public function index()
     {
         return response()->json([
             'data' => new CartResource($this->cartService->getPayload()),
         ]);
     }
 
-    public function store(AddToCartRequest $request): JsonResponse
+    public function store(AddToCartRequest $request)
     {
         try {
             $payload = $this->cartService->addProduct($request->product_id, (int) ($request->quantity ?? 1));
@@ -39,7 +38,7 @@ class CartController extends Controller
         }
     }
 
-    public function update(UpdateCartRequest $request, int $productId): JsonResponse
+    public function update(UpdateCartRequest $request, int $productId)
     {
         try {
             $payload = $this->cartService->updateProductQuantity($productId, (int) $request->quantity);
@@ -57,7 +56,7 @@ class CartController extends Controller
         }
     }
 
-    public function destroy(int $productId): JsonResponse
+    public function destroy(int $productId)
     {
         $payload = $this->cartService->removeProduct($productId);
 
@@ -67,7 +66,7 @@ class CartController extends Controller
         ]);
     }
 
-    public function clear(): JsonResponse
+    public function clear()
     {
         return response()->json([
             'message' => 'Cart cleared successfully.',

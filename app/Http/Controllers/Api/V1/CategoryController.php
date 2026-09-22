@@ -5,12 +5,11 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index(Request $request): JsonResponse
+    public function index(Request $request)
     {
         $categories = Category::query()
             ->orderBy('name')
@@ -21,7 +20,7 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function show(Category $category): JsonResponse
+    public function show(Category $category)
     {
         return response()->json([
             'data' => new CategoryResource($category->load('products')),

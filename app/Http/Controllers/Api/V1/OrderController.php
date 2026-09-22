@@ -7,7 +7,6 @@ use App\Http\Requests\Api\V1\CheckoutRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Services\CheckoutService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use RuntimeException;
 
@@ -17,7 +16,7 @@ class OrderController extends Controller
     {
     }
 
-    public function index(): JsonResponse
+    public function index()
     {
         $orders = Order::with('items.product')
             ->where('user_id', Auth::id())
@@ -35,7 +34,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function show(Order $order): JsonResponse
+    public function show(Order $order)
     {
         abort_unless($order->user_id === Auth::id() || Auth::user()?->is_admin, 403);
 
@@ -46,7 +45,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function checkout(CheckoutRequest $request): JsonResponse
+    public function checkout(CheckoutRequest $request)
     {
         try {
             $order = $this->checkoutService->createOrderForCurrentUser($request->validated(), Auth::id());
@@ -62,7 +61,7 @@ class OrderController extends Controller
         }
     }
 
-    public function cancel(Order $order): JsonResponse
+    public function cancel(Order $order)
     {
         abort_unless($order->user_id === Auth::id() || Auth::user()?->is_admin, 403);
         abort_if(in_array($order->status, ['cancelled', 'shipped', 'delivered'], true), 422, 'This order cannot be cancelled.');

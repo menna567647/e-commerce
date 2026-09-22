@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\CheckoutRequest;
 use App\Http\Resources\OrderResource;
 use App\Services\CheckoutService;
-use Illuminate\Http\JsonResponse;
 use RuntimeException;
 
 class CheckoutController extends Controller
@@ -15,7 +14,7 @@ class CheckoutController extends Controller
     {
     }
 
-    public function store(CheckoutRequest $request): JsonResponse
+    public function store(CheckoutRequest $request)
     {
         try {
             $order = $this->checkoutService->createOrderForCurrentUser($request->validated(), auth()->id());

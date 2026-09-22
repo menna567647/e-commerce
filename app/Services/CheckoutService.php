@@ -4,8 +4,8 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\User;
 use App\Services\Payments\PaymentGateway;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -20,16 +20,17 @@ class CheckoutService
 
     public function createOrderForCurrentUser(array $data, int $userId): Order
     {
-        $cart = session('cart', []);
-
-        if (empty($cart)) {
-            throw new \RuntimeException('Your cart is empty.');
-        }
-
-        $items = $this->cartService->resolveCartItems($cart);
+        $user = User::findOrFail($userId);
+        $items = $this->cartService->getCartItemsForUser($user);
 
         if ($items->isEmpty()) {
-            throw new \RuntimeException('Your cart is empty.');
+            $legacyItems = $this->cartService->resolveCartItems(session('cart', []));
+
+            if ($legacyItems->isEmpty()) {
+                throw new \RuntimeException('Your cart is empty.');
+            }
+
+            $items = $legacyItems;
         }
 
         foreach ($items as $item) {
@@ -52,9 +53,9 @@ class CheckoutService
             throw new \RuntimeException($paymentResult['message'] ?? 'Payment failed. Please try again.');
         }
 
-        return DB::transaction(function () use ($data, $items, $subtotal, $discountAmount, $total, $userId) {
+        return DB::transaction(function () use ($data, $items, $subtotal, $discountAmount, $total, $user) {
             $order = Order::create([
-                'user_id' => $userId,
+                'user_id' => $user->id,
                 'order_number' => 'ORD-'.strtoupper(Str::uuid()->toString()),
                 'subtotal' => $subtotal,
                 'discount_amount' => $discountAmount,
@@ -88,6 +89,7 @@ class CheckoutService
                 $product->save();
             }
 
+            $user->cartItems()->delete();
             session()->forget('cart');
 
             return $order->load('items.product');

@@ -31,4 +31,9 @@ class User extends Authenticatable
             'is_admin' => 'boolean',
         ];
     }
+
+    public function cartItems()
+    {
+        return $this->hasMany(Cart::class);
+    }
 }

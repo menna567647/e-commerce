@@ -34,7 +34,6 @@ Route::prefix('v1')->group(function () {
         Route::delete('/cart', [CartController::class, 'clear']);
 
         Route::post('/checkout', [CheckoutController::class, 'store']);
-        Route::post('/orders/checkout', [CheckoutController::class, 'store']);
 
         Route::get('/orders', [OrderController::class, 'index']);
         Route::get('/orders/{order}', [OrderController::class, 'show']);
