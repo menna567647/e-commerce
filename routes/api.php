@@ -28,7 +28,7 @@ Route::prefix('v1')->group(function () {
         Route::put('/user/profile', [AuthController::class, 'updateProfile']);
 
         Route::get('/cart', [CartController::class, 'index']);
-        Route::post('/cart', [CartController::class, 'store'])->name('cart.add');
+        Route::post('/cart', [CartController::class, 'store']);
         Route::patch('/cart/{productId}', [CartController::class, 'update']);
         Route::delete('/cart/{productId}', [CartController::class, 'destroy']);
         Route::delete('/cart', [CartController::class, 'clear']);
